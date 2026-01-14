@@ -43,7 +43,7 @@ export default function Home() {
               Découvrir
             </a>
             <a
-              href="https://github.com/agoranodes"
+              href="https://github.com/lolosequence/agoranodes"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-white text-indigo-600 text-lg font-semibold rounded-full hover:bg-gray-50 transition shadow-lg"
