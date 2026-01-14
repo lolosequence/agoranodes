@@ -1,3 +1,5 @@
+import { AuthButton } from './components/auth-button';
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -17,9 +19,10 @@ export default function Home() {
             <a href="/how-it-works" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
               Comment ça marche
             </a>
-            <a href="#contact" className="px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition">
-              Rejoindre la Beta
+            <a href="/votes" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+              🗳️ Votes
             </a>
+            <AuthButton />
           </div>
         </nav>
       </header>
