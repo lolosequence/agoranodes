@@ -1,8 +1,32 @@
 import Link from 'next/link';
+import { getArticles, StrapiArticle } from '@/lib/strapi';
 import { getAllArticles } from '@/lib/markdown';
 
-export default function ArticlesPage() {
-  const articles = getAllArticles();
+export default async function ArticlesPage() {
+  // Fetch from Strapi first, fallback to local markdown
+  let articles: Array<{
+    slug: string;
+    title: string;
+    author: string;
+    date: string;
+    excerpt?: string;
+  }> = [];
+
+  const strapiArticles = await getArticles();
+
+  if (strapiArticles.length > 0) {
+    // Use Strapi articles
+    articles = strapiArticles.map((article: StrapiArticle) => ({
+      slug: article.slug,
+      title: article.title,
+      author: article.author?.name || 'Agoranodes',
+      date: article.publishedAt || article.createdAt,
+      excerpt: article.excerpt,
+    }));
+  } else {
+    // Fallback to local markdown files
+    articles = getAllArticles();
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">

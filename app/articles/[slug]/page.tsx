@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getArticleBySlug, getAllArticleSlugs } from '@/lib/markdown';
+import { getArticleBySlug as getStrapiArticle, getAllArticleSlugs as getStrapiSlugs } from '@/lib/strapi';
+import { getArticleBySlug as getMarkdownArticle, getAllArticleSlugs as getMarkdownSlugs } from '@/lib/markdown';
 
 interface ArticlePageProps {
   params: Promise<{
@@ -9,15 +10,49 @@ interface ArticlePageProps {
 }
 
 export async function generateStaticParams() {
-  const slugs = getAllArticleSlugs();
-  return slugs.map((slug) => ({
+  // Get slugs from both sources
+  const strapiSlugs = await getStrapiSlugs();
+  const markdownSlugs = getMarkdownSlugs();
+
+  const allSlugs = [...new Set([...strapiSlugs, ...markdownSlugs])];
+
+  return allSlugs.map((slug) => ({
     slug,
   }));
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+
+  // Try Strapi first
+  const strapiArticle = await getStrapiArticle(slug);
+
+  let article: {
+    title: string;
+    author: string;
+    date: string;
+    contentHtml: string;
+  } | null = null;
+
+  if (strapiArticle) {
+    article = {
+      title: strapiArticle.title,
+      author: strapiArticle.author?.name || 'Agoranodes',
+      date: strapiArticle.publishedAt || strapiArticle.createdAt,
+      contentHtml: strapiArticle.content || '',
+    };
+  } else {
+    // Fallback to markdown
+    const markdownArticle = await getMarkdownArticle(slug);
+    if (markdownArticle) {
+      article = {
+        title: markdownArticle.title,
+        author: markdownArticle.author,
+        date: markdownArticle.date,
+        contentHtml: markdownArticle.contentHtml,
+      };
+    }
+  }
 
   if (!article) {
     notFound();
