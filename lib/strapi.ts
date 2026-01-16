@@ -5,8 +5,9 @@ export interface StrapiArticle {
   documentId: string;
   title: string;
   slug: string;
-  content: string;
-  excerpt: string;
+  content?: string;
+  description?: string;
+  excerpt?: string;
   publishedAt: string;
   createdAt: string;
   updatedAt: string;

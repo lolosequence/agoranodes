@@ -21,7 +21,7 @@ export default async function ArticlesPage() {
       title: article.title,
       author: article.author?.name || 'Agoranodes',
       date: article.publishedAt || article.createdAt,
-      excerpt: article.excerpt,
+      excerpt: article.excerpt || article.description,
     }));
   } else {
     // Fallback to local markdown files

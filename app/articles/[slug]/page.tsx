@@ -39,7 +39,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       title: strapiArticle.title,
       author: strapiArticle.author?.name || 'Agoranodes',
       date: strapiArticle.publishedAt || strapiArticle.createdAt,
-      contentHtml: strapiArticle.content || '',
+      contentHtml: strapiArticle.content || strapiArticle.description || '',
     };
   } else {
     // Fallback to markdown
