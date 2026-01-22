@@ -1,13 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Home,
-  BookOpen,
-  Layers,
-  Vote,
-  Info,
   ChevronRight,
   Cpu
 } from "lucide-react";
@@ -21,25 +17,16 @@ export default function LandingPage() {
   return (
     <div className="relative min-h-screen bg-white font-sans selection:bg-indigo-100 selection:text-indigo-900">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 backdrop-blur-md bg-white/30 border-b border-white/20">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-            <div className="w-4 h-4 bg-white rounded-sm rotate-45" />
-          </div>
-          <span className="text-xl font-bold tracking-tighter text-foreground">
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 h-20 bg-transparent transition-all">
+        <div className="flex items-center cursor-pointer">
+          <span className="text-xl font-bold tracking-tight text-white">
             Agoranodes
           </span>
         </div>
 
-        <div className="hidden md:flex items-center bg-white/40 p-1.5 rounded-full border border-white/40 shadow-sm">
-          <NavLink href="/" icon={<Home size={18} />} label="Accueil" active />
-          <NavLink href="/how-it-works" icon={<BookOpen size={18} />} label="Explications" />
-          <NavLink href="/articles" icon={<Layers size={18} />} label="Contenus" />
-          <NavLink href="/votes" icon={<Vote size={18} />} label="Votes" />
-          <NavLink href="/about" icon={<Info size={18} />} label="À propos" />
-        </div>
+        <NavMenu />
 
-        <button className="bg-foreground text-background px-6 py-2 rounded-full font-medium hover:bg-neutral-800 transition-all active:scale-95 shadow-lg shadow-black/5">
+        <button className="bg-[#000000]/70 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#000000]/90 transition-colors">
           Login
         </button>
       </nav>
@@ -145,20 +132,76 @@ export default function LandingPage() {
   );
 }
 
-function NavLink({ href, icon, label, active = false }: { href: string, icon: React.ReactNode, label: string, active?: boolean }) {
+const menuItems = [
+  { href: "/", icon: <Home size={18} />, label: null },
+  { href: "/how-it-works", icon: null, label: "Explications" },
+  { href: "/articles", icon: null, label: "Contenus" },
+  { href: "/forum", icon: null, label: "Forum" },
+  { href: "/framework", icon: null, label: "Framework" },
+];
+
+function NavMenu() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0); // Page d'accueil par défaut
+  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0 });
+  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const targetIndex = hoveredIndex !== null ? hoveredIndex : activeIndex;
+    const targetEl = itemRefs.current[targetIndex];
+    const containerEl = containerRef.current;
+
+    if (targetEl && containerEl) {
+      const containerRect = containerEl.getBoundingClientRect();
+      const targetRect = targetEl.getBoundingClientRect();
+      setPillStyle({
+        left: targetRect.left - containerRect.left,
+        width: targetRect.width,
+      });
+    }
+  }, [hoveredIndex, activeIndex]);
+
   return (
-    <Link
-      href={href}
-      className={`
-        flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-all
-        ${active
-          ? "bg-white text-indigo-600 border border-indigo-100 shadow-sm"
-          : "text-neutral-600 hover:text-neutral-900 hover:bg-white/50"}
-      `}
+    <div
+      ref={containerRef}
+      className="hidden md:flex items-center gap-0.5 bg-[#000000]/70 px-1.5 py-1.5 rounded-full relative"
+      onMouseLeave={() => setHoveredIndex(null)}
     >
-      {icon}
-      <span>{label}</span>
-    </Link>
+      {/* Sliding pill background */}
+      <motion.div
+        className="absolute bg-white rounded-full h-[calc(100%-12px)] top-1.5"
+        animate={{
+          left: pillStyle.left,
+          width: pillStyle.width,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 30,
+        }}
+      />
+
+      {menuItems.map((item, index) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          ref={(el) => { itemRefs.current[index] = el; }}
+          onMouseEnter={() => setHoveredIndex(index)}
+          onClick={() => setActiveIndex(index)}
+          className={`
+            relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full text-sm font-medium transition-colors
+            ${(hoveredIndex !== null ? hoveredIndex === index : activeIndex === index)
+              ? "text-neutral-900"
+              : "text-white"}
+            ${item.icon && !item.label ? "px-2.5" : ""}
+          `}
+        >
+          {item.icon}
+          {item.label && <span>{item.label}</span>}
+        </Link>
+      ))}
+    </div>
   );
 }
 
