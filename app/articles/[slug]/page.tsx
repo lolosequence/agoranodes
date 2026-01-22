@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getArticleBySlug as getStrapiArticle, getAllArticleSlugs as getStrapiSlugs } from '@/lib/strapi';
+import { getArticleBySlug as getStrapiArticle, getAllArticleSlugs as getStrapiSlugs, blocksToHtml } from '@/lib/strapi';
 import { getArticleBySlug as getMarkdownArticle, getAllArticleSlugs as getMarkdownSlugs } from '@/lib/markdown';
 
 interface ArticlePageProps {
@@ -35,11 +35,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   } | null = null;
 
   if (strapiArticle) {
+    // Convertir les blocks en HTML
+    const blocksHtml = await blocksToHtml(strapiArticle.blocks);
+
     article = {
       title: strapiArticle.title,
       author: strapiArticle.author?.name || 'Agoranodes',
       date: strapiArticle.publishedAt || strapiArticle.createdAt,
-      contentHtml: strapiArticle.content || strapiArticle.description || '',
+      contentHtml: blocksHtml || strapiArticle.description || '',
     };
   } else {
     // Fallback to markdown
