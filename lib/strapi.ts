@@ -99,13 +99,10 @@ export async function getArticles(): Promise<StrapiArticle[]> {
 
 export async function getArticleBySlug(slug: string): Promise<StrapiArticle | null> {
   try {
-    // Populate deep pour récupérer les blocks et leurs contenus
-    // Utilisation de URLSearchParams pour encoder correctement les paramètres
+    // Utilisation de populate=* qui fonctionne bien avec Strapi
     const params = new URLSearchParams();
     params.append('filters[slug][$eq]', slug);
-    params.append('populate[author]', '*');
-    params.append('populate[cover]', '*');
-    params.append('populate[blocks][populate]', '*');
+    params.append('populate', '*');
 
     const response = await fetchAPI<StrapiResponse<StrapiArticle[]>>(
       `/articles?${params.toString()}`
