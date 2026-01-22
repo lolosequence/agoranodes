@@ -75,18 +75,13 @@ export default function LandingPage() {
           style={{ y: y1, opacity }}
           className="relative z-30 text-center px-6 max-w-6xl mx-auto"
         >
-          <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <span
             className="inline-block px-4 py-1.5 mb-8 text-sm font-semibold tracking-widest uppercase text-indigo-900/60 bg-white/20 backdrop-blur-sm rounded-full border border-white/30"
           >
             L'intelligence Collective
-          </motion.span>
+          </span>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.8 }}
+          <h1
             className="text-6xl md:text-8xl lg:text-9xl font-bold text-neutral-900 leading-[0.9] tracking-tight"
           >
             Construisons <br />
@@ -94,22 +89,16 @@ export default function LandingPage() {
               ensemble
             </span> <br />
             le système.
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+          <p
             className="mt-12 text-lg md:text-xl text-neutral-800/70 max-w-2xl mx-auto font-medium leading-relaxed"
           >
             Le futur de la gouvernance ne se décrète pas, il s'assemble.
             Rejoignez une architecture de pensée modulaire et décentralisée.
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6 }}
+          <div
             className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <button className="group relative flex items-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-500/20">
@@ -119,7 +108,7 @@ export default function LandingPage() {
             <button className="px-8 py-4 rounded-full text-lg font-semibold text-neutral-800 hover:bg-white/40 backdrop-blur-sm transition-all border border-white/50">
               Voir le manifeste
             </button>
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* Scroll Indicator */}
