@@ -9,6 +9,12 @@ interface ArticlePageProps {
   }>;
 }
 
+// Permet de générer les pages à la demande si elles n'existent pas au build time
+export const dynamicParams = true;
+
+// Revalider la page toutes les 60 secondes
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   // Get slugs from both sources
   const strapiSlugs = await getStrapiSlugs();
