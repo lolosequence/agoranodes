@@ -88,7 +88,7 @@ export default function LandingPage() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-900 via-indigo-950 to-neutral-800">
               ensemble
             </span> <br />
-            le système.
+            la démocratie
           </h1>
 
           <p
