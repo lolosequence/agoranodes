@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   Home,
   ChevronRight,
-  Cpu
+  Sparkle
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -32,35 +32,19 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-        {/* Dynamic Sky Background */}
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#7dd3fc] via-[#f9a8d4] to-[#ffedd5]">
-          {/* Animated Sun/Glow */}
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.5, 0.3]
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-200/30 rounded-full blur-[120px]"
-          />
-        </div>
+      <section className="relative flex flex-col items-center justify-center overflow-hidden">
+        {/* Hero Background Image - natural height */}
+        <img
+          src="/bg-hero-cite.jpg"
+          alt="Cité grecque"
+          className="w-full h-auto object-contain z-0"
+        />
 
-        {/* Clouds Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 h-96 pointer-events-none">
-          {/* Fluffy Bottom Clouds */}
-          <Cloud speed={20} opacity={0.8} bottom={-20} left={-10} scale={1.5} />
-          <Cloud speed={25} opacity={0.9} bottom={-40} right={-5} scale={1.8} />
-          <Cloud speed={18} opacity={0.7} bottom={-10} left={30} scale={1.2} />
-
-          {/* Foggy transition */}
-          <div className="absolute bottom-0 inset-x-0 h-64 bg-gradient-to-t from-white via-white/80 to-transparent" />
-        </div>
 
         {/* Content */}
         <motion.div
           style={{ y: y1, opacity }}
-          className="relative z-30 text-center px-6 max-w-6xl mx-auto"
+          className="absolute top-0 left-0 right-0 z-30 flex flex-col items-center justify-start pt-28 text-center px-6 max-w-6xl mx-auto h-screen"
         >
           <span
             className="inline-block px-4 py-1.5 mb-8 text-sm font-semibold tracking-widest uppercase text-indigo-900/60 bg-white/20 backdrop-blur-sm rounded-full border border-white/30"
@@ -110,24 +94,6 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Placeholder Content for Scroll */}
-      <section className="relative z-30 bg-white py-24 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-          {[
-            { title: "Modulaire", desc: "Des briques de gouvernance adaptables à chaque communauté." },
-            { title: "Transparent", desc: "Chaque décision est tracée, vérifiable et immuable par design." },
-            { title: "Humain", desc: "La technologie au service du consensus, pas l'inverse." }
-          ].map((item, i) => (
-            <div key={i} className="group p-8 rounded-3xl border border-neutral-100 hover:border-indigo-100 hover:bg-indigo-50/30 transition-all duration-500">
-              <div className="w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center mb-6 text-indigo-600 group-hover:scale-110 transition-transform">
-                <Cpu size={24} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
-              <p className="text-neutral-600 leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
@@ -205,26 +171,3 @@ function NavMenu() {
   );
 }
 
-function Cloud({ speed, opacity, bottom, left, right, scale }: { speed: number, opacity: number, bottom?: number, left?: number, right?: number, scale?: number }) {
-  return (
-    <motion.div
-      initial={{ x: -100 }}
-      animate={{ x: 100 }}
-      transition={{ duration: speed, repeat: Infinity, repeatType: "mirror", ease: "linear" }}
-      className="absolute blur-3xl"
-      style={{
-        bottom,
-        left,
-        right,
-        opacity,
-        transform: `scale(${scale || 1})`
-      }}
-    >
-      <div className="flex gap-0 items-end">
-        <div className="w-64 h-64 bg-white rounded-full" />
-        <div className="w-80 h-80 bg-white rounded-full -ml-32" />
-        <div className="w-48 h-48 bg-white rounded-full -ml-20" />
-      </div>
-    </motion.div>
-  );
-}
