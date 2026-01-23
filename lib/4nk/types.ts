@@ -184,3 +184,139 @@ export interface VoteValidationResult {
   missingVotes: number;
   errors: string[];
 }
+
+// ============================================================================
+// TYPES POUR LE FORUM DECENTRALISE
+// ============================================================================
+
+/**
+ * Categorie de forum (predefini)
+ */
+export interface ForumCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+  topicCount: number;
+  postCount: number;
+}
+
+/**
+ * Topic de forum
+ */
+export interface ForumTopic {
+  id: string;
+  categoryId: string;
+  title: string;
+  slug: string;
+  authorAddress: string;
+  authorLabel: string;
+  content: string;        // HTML rendu
+  contentRaw: string;     // Markdown source
+  createdAt: string;
+  updatedAt: string;
+  replyCount: number;
+  voteScore: number;
+  upvotes: string[];
+  downvotes: string[];
+  isPinned: boolean;
+  isLocked: boolean;
+  isSolved: boolean;
+  isDeleted: boolean;
+  tags: string[];
+  signature: string;
+  lastReplyAt?: string;
+  lastReplyBy?: string;
+}
+
+/**
+ * Post/Reponse de forum
+ */
+export interface ForumPost {
+  id: string;
+  topicId: string;
+  parentPostId?: string;  // Reponses imbriquees
+  authorAddress: string;
+  authorLabel: string;
+  content: string;
+  contentRaw: string;
+  createdAt: string;
+  updatedAt?: string;
+  voteScore: number;
+  upvotes: string[];
+  downvotes: string[];
+  isDeleted: boolean;
+  isSolution: boolean;
+  mentions: string[];
+  signature: string;
+  replyCount?: number;
+}
+
+/**
+ * Notification de forum
+ */
+export interface ForumNotification {
+  id: string;
+  recipientAddress: string;
+  type: 'mention' | 'reply' | 'vote' | 'solution';
+  topicId: string;
+  topicTitle: string;
+  postId?: string;
+  actorAddress: string;
+  actorLabel: string;
+  preview: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
+/**
+ * Action de moderation
+ */
+export interface ModerationAction {
+  id: string;
+  type: 'delete_topic' | 'delete_post' | 'lock_topic' | 'unlock_topic' | 'pin_topic' | 'unpin_topic' | 'ban_user';
+  targetId: string;
+  targetType: 'topic' | 'post' | 'user';
+  moderatorAddress: string;
+  reason: string;
+  createdAt: string;
+  signature: string;
+}
+
+/**
+ * Reputation utilisateur forum
+ */
+export interface ForumUserReputation {
+  address: string;
+  label: string;
+  totalPosts: number;
+  totalTopics: number;
+  totalUpvotes: number;
+  totalDownvotes: number;
+  reputationScore: number;
+  isBanned: boolean;
+  bannedUntil?: string;
+}
+
+/**
+ * Parametres de creation d'un topic
+ */
+export interface CreateTopicParams {
+  categoryId: string;
+  title: string;
+  content: string;
+  contentRaw: string;
+  tags?: string[];
+}
+
+/**
+ * Parametres de creation d'un post
+ */
+export interface CreatePostParams {
+  topicId: string;
+  parentPostId?: string;
+  content: string;
+  contentRaw: string;
+  mentions?: string[];
+}
