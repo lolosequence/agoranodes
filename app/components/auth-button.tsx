@@ -61,7 +61,7 @@ export function AuthButton() {
     return (
       <button
         disabled
-        className="px-6 py-2 bg-gray-400 text-white rounded-full cursor-not-allowed"
+        className="px-6 py-2 bg-[#000000]/70 text-white rounded-full cursor-not-allowed opacity-70"
       >
         Chargement...
       </button>
@@ -74,7 +74,7 @@ export function AuthButton() {
       <div className="relative">
         <button
           onClick={() => setShowUserMenu(!showUserMenu)}
-          className="px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition flex items-center gap-2"
+          className="px-6 py-2 bg-[#000000]/70 text-white rounded-full hover:bg-white hover:text-black transition-colors cursor-pointer flex items-center gap-2"
         >
           <span>🔐</span>
           <span>{truncateAddress(user.mainAddress, 6, 4)}</span>
@@ -124,9 +124,9 @@ export function AuthButton() {
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition"
+        className="px-6 py-2 bg-[#000000]/70 text-white rounded-full hover:bg-white hover:text-black transition-colors cursor-pointer"
       >
-        Se connecter
+        Login
       </button>
 
       {/* Modal de création d'identité */}

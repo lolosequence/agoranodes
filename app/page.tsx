@@ -8,6 +8,7 @@ import {
   Sparkle
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { AuthButton } from "./components/auth-button";
 
 export default function LandingPage() {
   const { scrollY } = useScroll();
@@ -26,9 +27,7 @@ export default function LandingPage() {
 
         <NavMenu />
 
-        <button className="bg-[#000000]/70 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#000000]/90 transition-colors">
-          Login
-        </button>
+        <AuthButton />
       </nav>
 
       {/* Hero Section */}
