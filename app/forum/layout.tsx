@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/4nk/hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { getUnreadNotificationCount } from '@/lib/4nk/forum/forum-storage';
+import { ThemeToggle } from '../components/theme-toggle';
 
 export default function ForumLayout({
   children,
@@ -104,6 +105,7 @@ export default function ForumLayout({
                   Se connecter
                 </Link>
               )}
+              <ThemeToggle />
             </nav>
           </div>
         </div>

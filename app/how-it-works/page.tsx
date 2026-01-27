@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ThemeToggle } from '../components/theme-toggle';
 
 export default function HowItWorksPage() {
   return (
@@ -11,7 +12,7 @@ export default function HowItWorksPage() {
               Agoranodes
             </h1>
           </Link>
-          <div className="space-x-6">
+          <div className="flex items-center space-x-6">
             <Link href="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
               Accueil
             </Link>
@@ -21,6 +22,7 @@ export default function HowItWorksPage() {
             <Link href="/how-it-works" className="text-indigo-600 dark:text-indigo-400 font-semibold">
               Comment ça marche
             </Link>
+            <ThemeToggle />
           </div>
         </nav>
       </header>
