@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Dark mode based on class */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Hero New Font Family */
 @font-face {
   font-family: 'Hero New';

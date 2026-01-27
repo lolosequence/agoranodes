@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getArticles, StrapiArticle } from '@/lib/strapi';
 import { getAllArticles } from '@/lib/markdown';
+import { ThemeToggle } from '../components/theme-toggle';
 
 export default async function ArticlesPage() {
   // Fetch from Strapi first, fallback to local markdown
@@ -38,13 +39,14 @@ export default async function ArticlesPage() {
               Agoranodes
             </h1>
           </Link>
-          <div className="space-x-6">
+          <div className="flex items-center space-x-6">
             <Link href="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
               Accueil
             </Link>
             <Link href="/articles" className="text-indigo-600 dark:text-indigo-400 font-semibold">
               Articles
             </Link>
+            <ThemeToggle />
           </div>
         </nav>
       </header>

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getArticleBySlug as getStrapiArticle, getAllArticleSlugs as getStrapiSlugs, blocksToHtml } from '@/lib/strapi';
 import { getArticleBySlug as getMarkdownArticle, getAllArticleSlugs as getMarkdownSlugs } from '@/lib/markdown';
+import { ThemeToggle } from '../../components/theme-toggle';
 
 interface ArticlePageProps {
   params: Promise<{
@@ -74,13 +75,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               Agoranodes
             </h1>
           </Link>
-          <div className="space-x-6">
+          <div className="flex items-center space-x-6">
             <Link href="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
               Accueil
             </Link>
             <Link href="/articles" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
               Articles
             </Link>
+            <ThemeToggle />
           </div>
         </nav>
       </header>
