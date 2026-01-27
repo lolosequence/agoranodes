@@ -12,6 +12,7 @@ export interface ArticleMetadata {
   date: string;
   author: string;
   excerpt?: string;
+  category?: string;
 }
 
 export interface Article extends ArticleMetadata {
@@ -40,6 +41,7 @@ export function getAllArticles(): ArticleMetadata[] {
       date: data.date,
       author: data.author,
       excerpt: data.excerpt,
+      category: data.category,
     };
   });
 

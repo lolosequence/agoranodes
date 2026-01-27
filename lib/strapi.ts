@@ -49,6 +49,10 @@ export interface StrapiArticle {
     name: string;
     email?: string;
   };
+  category?: {
+    name: string;
+    slug?: string;
+  };
   cover?: {
     url: string;
     alternativeText?: string;
