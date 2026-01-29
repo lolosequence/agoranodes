@@ -45,6 +45,7 @@ export interface StrapiArticle {
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
+  featured?: boolean;
   author?: {
     name: string;
     email?: string;
@@ -58,6 +59,23 @@ export interface StrapiArticle {
     alternativeText?: string;
   };
   blocks?: ContentBlock[];
+}
+
+export interface StrapiCategory {
+  id: number;
+  documentId: string;
+  name: string;
+  slug: string;
+  description?: string;
+}
+
+export interface ArticleSubmission {
+  title: string;
+  slug: string;
+  content: string;
+  excerpt?: string;
+  category?: number;
+  author?: string;
 }
 
 interface StrapiResponse<T> {
@@ -125,6 +143,55 @@ export async function getAllArticleSlugs(): Promise<string[]> {
   } catch (error) {
     console.error('Error fetching article slugs from Strapi:', error);
     return [];
+  }
+}
+
+export async function getCategories(): Promise<StrapiCategory[]> {
+  try {
+    const response = await fetchAPI<StrapiResponse<StrapiCategory[]>>(
+      '/categories?sort=name:asc'
+    );
+    return response.data || [];
+  } catch (error) {
+    console.error('Error fetching categories from Strapi:', error);
+    return [];
+  }
+}
+
+export async function getFeaturedArticles(): Promise<StrapiArticle[]> {
+  try {
+    const response = await fetchAPI<StrapiResponse<StrapiArticle[]>>(
+      '/articles?filters[featured][$eq]=true&populate=*&sort=publishedAt:desc'
+    );
+    return response.data || [];
+  } catch (error) {
+    console.error('Error fetching featured articles from Strapi:', error);
+    return [];
+  }
+}
+
+export async function createArticle(article: ArticleSubmission): Promise<StrapiArticle | null> {
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/articles`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        data: {
+          ...article,
+          publishedAt: null,
+          featured: false,
+        }
+      }),
+    });
+
+    if (!res.ok) throw new Error('Failed to create article');
+    const response = await res.json();
+    return response.data;
+  } catch (error) {
+    console.error('Error creating article:', error);
+    return null;
   }
 }
 

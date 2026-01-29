@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getArticleBySlug as getStrapiArticle, getAllArticleSlugs as getStrapiSlugs, blocksToHtml } from '@/lib/strapi';
 import { getArticleBySlug as getMarkdownArticle, getAllArticleSlugs as getMarkdownSlugs } from '@/lib/markdown';
 import { ThemeToggle } from '../../components/theme-toggle';
+import { ArrowLeft, Calendar, User, Tag } from 'lucide-react';
 
 interface ArticlePageProps {
   params: Promise<{
@@ -36,6 +37,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     author: string;
     date: string;
     contentHtml: string;
+    category?: string;
+    excerpt?: string;
   } | null = null;
 
   if (strapiArticle) {
@@ -47,6 +50,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       author: strapiArticle.author?.name || 'Agoranodes',
       date: strapiArticle.publishedAt || strapiArticle.createdAt,
       contentHtml: blocksHtml || strapiArticle.description || '',
+      category: strapiArticle.category?.name,
+      excerpt: strapiArticle.excerpt || strapiArticle.description,
     };
   } else {
     // Fallback to markdown
@@ -57,6 +62,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         author: markdownArticle.author,
         date: markdownArticle.date,
         contentHtml: markdownArticle.contentHtml,
+        category: markdownArticle.category,
+        excerpt: markdownArticle.excerpt,
       };
     }
   }
@@ -79,8 +86,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <Link href="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
               Accueil
             </Link>
-            <Link href="/articles" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-              Articles
+            <Link href="/publications" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+              Publications
             </Link>
             <ThemeToggle />
           </div>
@@ -92,27 +99,46 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <article className="max-w-4xl mx-auto">
           {/* Back Link */}
           <Link
-            href="/articles"
-            className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition mb-8"
+            href="/publications"
+            className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition mb-8"
           >
-            ← Retour aux articles
+            <ArrowLeft className="w-4 h-4" />
+            Retour aux publications
           </Link>
 
           {/* Article Header */}
           <div className="bg-white dark:bg-gray-800 p-8 md:p-12 rounded-2xl shadow-lg mb-8">
+            {article.category && (
+              <div className="flex items-center gap-2 mb-4">
+                <Tag className="w-4 h-4 text-indigo-500" />
+                <span className="inline-block px-3 py-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/30 rounded-full">
+                  {article.category}
+                </span>
+              </div>
+            )}
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               {article.title}
             </h1>
-            <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400">
-              <span className="font-semibold">{article.author}</span>
-              <span>•</span>
-              <time dateTime={article.date}>
-                {new Date(article.date).toLocaleDateString('fr-FR', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
+            {article.excerpt && (
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
+                {article.excerpt}
+              </p>
+            )}
+            <div className="flex flex-wrap items-center gap-6 text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                <span className="font-semibold">{article.author}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <time dateTime={article.date}>
+                  {new Date(article.date).toLocaleDateString('fr-FR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+              </div>
             </div>
           </div>
 
@@ -126,18 +152,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 prose-strong:text-gray-900 dark:prose-strong:text-white
                 prose-ul:text-gray-700 dark:prose-ul:text-gray-300
                 prose-ol:text-gray-700 dark:prose-ol:text-gray-300
-                prose-li:text-gray-700 dark:prose-li:text-gray-300"
+                prose-li:text-gray-700 dark:prose-li:text-gray-300
+                prose-blockquote:border-indigo-500 prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-300
+                prose-img:rounded-lg prose-img:shadow-md"
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
           </div>
 
           {/* Back Link Bottom */}
-          <div className="mt-12">
+          <div className="mt-12 flex items-center justify-between">
             <Link
-              href="/articles"
-              className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition"
+              href="/publications"
+              className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition"
             >
-              ← Retour aux articles
+              <ArrowLeft className="w-4 h-4" />
+              Retour aux publications
             </Link>
           </div>
         </article>

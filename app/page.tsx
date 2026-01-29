@@ -100,7 +100,7 @@ export default function LandingPage() {
 const menuItems = [
   { href: "/", icon: <Home size={18} />, label: null },
   { href: "/how-it-works", icon: null, label: "Explications" },
-  { href: "/articles", icon: null, label: "Contenus" },
+  { href: "/publications", icon: null, label: "Publications" },
   { href: "/forum", icon: null, label: "Forum" },
   { href: "/framework", icon: null, label: "Framework" },
 ];
