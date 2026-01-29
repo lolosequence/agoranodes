@@ -1,34 +1,13 @@
-import Link from 'next/link';
-import { ThemeToggle } from '../components/theme-toggle';
+import { Navbar } from '../components/navbar';
 
 export default function HowItWorksPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-8">
-        <nav className="flex justify-between items-center">
-          <Link href="/">
-            <h1 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition cursor-pointer">
-              Agoranodes
-            </h1>
-          </Link>
-          <div className="flex items-center space-x-6">
-            <Link href="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-              Accueil
-            </Link>
-            <Link href="/articles" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-              Articles
-            </Link>
-            <Link href="/how-it-works" className="text-indigo-600 dark:text-indigo-400 font-semibold">
-              Comment ça marche
-            </Link>
-            <ThemeToggle />
-          </div>
-        </nav>
-      </header>
+      {/* Navbar */}
+      <Navbar />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 pt-28 pb-12">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-16">

@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { getArticles, getCategories, StrapiArticle, StrapiCategory } from '@/lib/strapi';
 import { getAllArticles } from '@/lib/markdown';
-import { ThemeToggle } from '../components/theme-toggle';
+import { Navbar } from '../components/navbar';
 import { FeaturedArticles } from '../components/publications/featured-articles';
 import { CategorySection } from '../components/publications/category-section';
 import { PublicationsFilter } from '../components/publications/publications-filter';
 import { HowToPublish } from '../components/publications/how-to-publish';
+import { CategoryBlocks } from '../components/publications/category-blocks';
 import { BookOpen, Sparkles } from 'lucide-react';
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://api.agoranodes.org';
@@ -87,40 +88,11 @@ export default async function PublicationsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-8">
-        <nav className="flex justify-between items-center">
-          <Link href="/">
-            <h1 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition cursor-pointer">
-              Agoranodes
-            </h1>
-          </Link>
-          <div className="flex items-center space-x-6">
-            <Link
-              href="/"
-              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-            >
-              Accueil
-            </Link>
-            <Link
-              href="/publications"
-              className="text-indigo-600 dark:text-indigo-400 font-semibold"
-            >
-              Publications
-            </Link>
-            <Link
-              href="/forum"
-              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-            >
-              Forum
-            </Link>
-            <ThemeToggle />
-          </div>
-        </nav>
-      </header>
+      {/* Navbar */}
+      <Navbar />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pt-28 pb-8">
         {/* Hero Section */}
         <section className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-sm font-medium mb-6">
@@ -139,6 +111,9 @@ export default async function PublicationsPage() {
         {featuredArticles.length > 0 && (
           <FeaturedArticles articles={featuredArticles} />
         )}
+
+        {/* Category Blocks */}
+        <CategoryBlocks />
 
         {/* Filters Section */}
         <PublicationsFilter articles={articles} categories={categories} />

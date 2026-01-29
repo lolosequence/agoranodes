@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/lib/4nk/auth-context';
 import { createArticle, getCategories, StrapiCategory } from '@/lib/strapi';
-import { ThemeToggle } from '../../components/theme-toggle';
+import { Navbar } from '../../components/navbar';
 import {
   ArrowLeft,
   Send,
@@ -120,24 +120,9 @@ export default function SubmitArticlePage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-        {/* Header */}
-        <header className="container mx-auto px-4 py-8">
-          <nav className="flex justify-between items-center">
-            <Link href="/">
-              <h1 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition cursor-pointer">
-                Agoranodes
-              </h1>
-            </Link>
-            <div className="flex items-center space-x-6">
-              <Link href="/publications" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-                Publications
-              </Link>
-              <ThemeToggle />
-            </div>
-          </nav>
-        </header>
+        <Navbar />
 
-        <main className="container mx-auto px-4 py-12">
+        <main className="container mx-auto px-4 pt-28 pb-12">
           <div className="max-w-md mx-auto">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 text-center">
               <div className="w-16 h-16 mx-auto mb-6 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center">
@@ -174,18 +159,9 @@ export default function SubmitArticlePage() {
   if (success) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-        <header className="container mx-auto px-4 py-8">
-          <nav className="flex justify-between items-center">
-            <Link href="/">
-              <h1 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition cursor-pointer">
-                Agoranodes
-              </h1>
-            </Link>
-            <ThemeToggle />
-          </nav>
-        </header>
+        <Navbar />
 
-        <main className="container mx-auto px-4 py-12">
+        <main className="container mx-auto px-4 pt-28 pb-12">
           <div className="max-w-md mx-auto">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 text-center">
               <div className="w-16 h-16 mx-auto mb-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
@@ -209,25 +185,11 @@ export default function SubmitArticlePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-8">
-        <nav className="flex justify-between items-center">
-          <Link href="/">
-            <h1 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition cursor-pointer">
-              Agoranodes
-            </h1>
-          </Link>
-          <div className="flex items-center space-x-6">
-            <Link href="/publications" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-              Publications
-            </Link>
-            <ThemeToggle />
-          </div>
-        </nav>
-      </header>
+      {/* Navbar */}
+      <Navbar />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pt-28 pb-8">
         <div className="max-w-4xl mx-auto">
           {/* Back Link */}
           <Link
