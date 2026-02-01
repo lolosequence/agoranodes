@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ConsentProvider } from "@/lib/consent/consent-context";
 import { AuthProvider } from "@/lib/4nk/auth-context";
+import CookieConsent from "@/app/components/cookie-consent";
 
 export const metadata: Metadata = {
   title: "Agoranodes - Démocratie Directe Décentralisée",
@@ -15,9 +17,12 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className="antialiased">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <ConsentProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+          <CookieConsent />
+        </ConsentProvider>
       </body>
     </html>
   );
