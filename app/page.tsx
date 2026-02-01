@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChevronRight, BookOpen, BrainCircuit, Vote, Play, X } from "lucide-react";
+import { ChevronRight, BookOpen, BrainCircuit, Vote, Play, X, Link, Blocks, Users, Zap } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Navbar } from "./components/navbar";
 
@@ -207,6 +207,192 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Ecosystem Section */}
+      <section className="py-24 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="bg-[#e8f5e3] rounded-[3rem] p-10 md:p-16 flex flex-col lg:flex-row gap-12 lg:gap-16 items-start"
+          >
+            {/* Left - Text */}
+            <div className="flex-1 flex flex-col justify-between min-h-full">
+              <div>
+                <span className="text-sm font-bold tracking-widest uppercase text-neutral-500 mb-4 block">
+                  Écosystème
+                </span>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#171717] leading-tight tracking-tight mb-6">
+                  Lorem ipsum dolor sit amet consectetur
+                </h2>
+                <p className="text-lg text-neutral-600 leading-relaxed max-w-md">
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+              </div>
+              <div className="mt-10">
+                <button className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#171717] text-white rounded-full font-semibold text-base hover:scale-105 transition-all duration-300">
+                  En savoir plus
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Right - Cards */}
+            <div className="flex-1 flex flex-col gap-4 w-full">
+              {/* Row 1 - Two side-by-side cards */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1 bg-white rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Link size={18} className="text-neutral-700" />
+                    <span className="font-bold text-sm text-neutral-800">Connexions</span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[...Array(8)].map((_, i) => (
+                      <div key={i} className="w-9 h-9 rounded-lg bg-neutral-100" />
+                    ))}
+                  </div>
+                </div>
+                <div className="flex-1 bg-white rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Blocks size={18} className="text-neutral-700" />
+                    <span className="font-bold text-sm text-neutral-800">Intégrations</span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[...Array(8)].map((_, i) => (
+                      <div key={i} className="w-9 h-9 rounded-lg bg-neutral-100" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 2 - Start Building */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <Zap size={18} className="text-neutral-700" />
+                  <span className="font-bold text-sm text-neutral-800">Pour commencer</span>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {["Lorem Ipsum", "Dolor Sit", "Amet Consect", "Adipiscing Elit"].map((label) => (
+                    <div key={label} className="px-4 py-2.5 bg-neutral-50 rounded-xl text-sm font-medium text-neutral-700 text-center border border-neutral-100">
+                      {label}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Row 3 - Community */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm flex items-center gap-4">
+                <Users size={18} className="text-neutral-700" />
+                <span className="font-bold text-sm text-neutral-800">Communauté</span>
+                <div className="flex -space-x-2 ml-auto">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className={`w-8 h-8 rounded-full border-2 border-white ${
+                      ["bg-indigo-400", "bg-sky-400", "bg-emerald-400", "bg-neutral-300"][i]
+                    }`} />
+                  ))}
+                </div>
+                <div className="text-right">
+                  <span className="font-bold text-sm text-neutral-800">200+</span>
+                  <p className="text-xs text-neutral-500">membres actifs</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Showcase Carousel Section */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-6">
+            <motion.span
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="text-sm font-bold tracking-widest uppercase text-neutral-500"
+            >
+              Personnalisation
+            </motion.span>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#171717] tracking-tight leading-tight mt-4"
+            >
+              Lorem ipsum dolor sit amet consectetur
+            </motion.h2>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-center mb-16"
+          >
+            <button className="px-7 py-3 bg-neutral-100 text-neutral-700 rounded-full font-semibold text-sm hover:bg-neutral-200 transition-colors">
+              En savoir plus
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Carousel - full width overflow */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="relative flex gap-6 px-6 pb-4"
+          style={{ width: "max-content", marginLeft: "auto", marginRight: "auto", transform: "translateX(-2%)" }}
+        >
+          {[
+            { name: "Lorem Ipsum", bg: "bg-purple-100", inner: "bg-yellow-50", accent: "bg-pink-200" },
+            { name: "Dolor Sit", bg: "bg-red-400", inner: "bg-red-100", accent: "bg-red-300" },
+            { name: "Amet Consect", bg: "bg-sky-200", inner: "bg-stone-200", accent: "bg-sky-300" },
+            { name: "Adipiscing", bg: "bg-neutral-700", inner: "bg-stone-200", accent: "bg-neutral-500" },
+            { name: "Elit Sed", bg: "bg-indigo-900", inner: "bg-black", accent: "bg-indigo-700" },
+            { name: "Tempor Magna", bg: "bg-amber-200", inner: "bg-amber-100", accent: "bg-amber-300" },
+            { name: "Quis Nostrud", bg: "bg-white border border-neutral-200", inner: "bg-amber-50", accent: "bg-neutral-200" },
+            { name: "Ut Labore", bg: "bg-neutral-800", inner: "bg-neutral-700", accent: "bg-yellow-400" },
+          ].map((card, i) => {
+            const rotations = [-4, -2.5, -1, 0.5, 2, -1.5, 1, 3];
+            const offsets = [12, -8, 16, -4, 10, -12, 6, -6];
+            return (
+              <div
+                key={card.name}
+                className={`relative flex-shrink-0 w-[160px] md:w-[190px] rounded-[1.5rem] ${card.bg} p-3 shadow-lg transition-transform duration-500 hover:scale-105 hover:rotate-0`}
+                style={{
+                  transform: `rotate(${rotations[i]}deg) translateY(${offsets[i]}px)`,
+                }}
+              >
+                {/* Card title */}
+                <span className={`block text-sm font-bold mb-2 ${
+                  ["bg-neutral-700", "bg-red-400", "bg-indigo-900", "bg-neutral-800"].includes(card.bg.split(" ")[0])
+                    ? "text-white"
+                    : "text-neutral-800"
+                }`}>
+                  {card.name}
+                </span>
+                {/* Card preview */}
+                <div className={`${card.inner} rounded-xl w-full aspect-[3/4] relative overflow-hidden`}>
+                  {/* Decorative line */}
+                  <div className={`absolute bottom-6 left-3 right-3 h-[2px] ${card.accent} rounded-full`} />
+                  <div className={`absolute bottom-10 left-3 right-6 h-[2px] ${card.accent} rounded-full opacity-50`} />
+                  {/* Decorative diagonal element */}
+                  <div
+                    className={`absolute bottom-4 left-2 w-8 h-24 ${card.accent} rounded-sm opacity-40`}
+                    style={{ transform: "rotate(-20deg)", transformOrigin: "bottom left" }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </motion.div>
       </section>
 
       {/* Step Detail Modal */}
