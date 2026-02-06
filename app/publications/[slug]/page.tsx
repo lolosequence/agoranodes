@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getArticleBySlug as getStrapiArticle, getAllArticleSlugs as getStrapiSlugs, blocksToHtml } from '@/lib/strapi';
-import { getArticleBySlug as getMarkdownArticle, getAllArticleSlugs as getMarkdownSlugs } from '@/lib/markdown';
+import { getArticleBySlug as getStrapiArticle, getArticles as getStrapiArticles, getAllArticleSlugs as getStrapiSlugs, blocksToHtml } from '@/lib/strapi';
+import { getArticleBySlug as getMarkdownArticle, getAllArticleSlugs as getMarkdownSlugs, getAllArticles as getMarkdownArticles } from '@/lib/markdown';
 import { Navbar } from '../../components/navbar';
-import { ArrowLeft, Calendar, User, Tag } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface ArticlePageProps {
   params: Promise<{
@@ -11,19 +11,61 @@ interface ArticlePageProps {
   }>;
 }
 
+interface RecentArticle {
+  slug: string;
+  title: string;
+  date: string;
+  category?: string;
+  cover?: string;
+}
+
 // Force le rendu dynamique (pas de cache statique)
 export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
-  // Get slugs from both sources
   const strapiSlugs = await getStrapiSlugs();
   const markdownSlugs = getMarkdownSlugs();
-
   const allSlugs = [...new Set([...strapiSlugs, ...markdownSlugs])];
+  return allSlugs.map((slug) => ({ slug }));
+}
 
-  return allSlugs.map((slug) => ({
-    slug,
-  }));
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://api.agoranodes.org';
+
+async function getRecentArticles(currentSlug: string, limit = 4): Promise<RecentArticle[]> {
+  const strapiArticles = await getStrapiArticles();
+  const markdownArticles = getMarkdownArticles();
+
+  const allArticles: (RecentArticle & { dateRaw: string })[] = [
+    ...strapiArticles.map(a => ({
+      slug: a.slug,
+      title: a.title,
+      date: a.publishedAt || a.createdAt,
+      dateRaw: a.publishedAt || a.createdAt,
+      category: a.category?.name,
+      cover: a.cover?.url
+        ? (a.cover.url.startsWith('http') ? a.cover.url : `${STRAPI_URL}${a.cover.url}`)
+        : undefined,
+    })),
+    ...markdownArticles.map(a => ({
+      slug: a.slug,
+      title: a.title,
+      date: a.date,
+      dateRaw: a.date,
+      category: a.category,
+      cover: undefined,
+    })),
+  ];
+
+  const uniqueMap = new Map<string, typeof allArticles[0]>();
+  for (const a of allArticles) {
+    if (!uniqueMap.has(a.slug)) uniqueMap.set(a.slug, a);
+  }
+
+  return Array.from(uniqueMap.values())
+    .filter(a => a.slug !== currentSlug && a.title)
+    .sort((a, b) => (a.dateRaw < b.dateRaw ? 1 : -1))
+    .slice(0, limit)
+    .map(({ dateRaw, ...rest }) => rest);
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
@@ -39,11 +81,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     contentHtml: string;
     category?: string;
     excerpt?: string;
+    cover?: string;
   } | null = null;
 
   if (strapiArticle) {
-    // Convertir les blocks en HTML
     const blocksHtml = await blocksToHtml(strapiArticle.blocks);
+    const coverUrl = strapiArticle.cover?.url
+      ? (strapiArticle.cover.url.startsWith('http') ? strapiArticle.cover.url : `https://api.agoranodes.org${strapiArticle.cover.url}`)
+      : undefined;
 
     article = {
       title: strapiArticle.title,
@@ -52,9 +97,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       contentHtml: blocksHtml || strapiArticle.description || '',
       category: strapiArticle.category?.name,
       excerpt: strapiArticle.excerpt || strapiArticle.description,
+      cover: coverUrl,
     };
   } else {
-    // Fallback to markdown
     const markdownArticle = await getMarkdownArticle(slug);
     if (markdownArticle) {
       article = {
@@ -72,105 +117,152 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  const recentArticles = await getRecentArticles(slug, 4);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Navbar */}
+    <div className="min-h-screen bg-white dark:bg-[#111111]">
       <Navbar />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 pt-28 pb-12">
-        <article className="max-w-4xl mx-auto">
-          {/* Back Link */}
-          <Link
-            href="/publications"
-            className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition mb-8"
+      <main className="w-[90%] lg:w-[70%] mx-auto">
+        {/* Article Header */}
+        <header className="pt-32 pb-8 md:pt-40 md:pb-12 text-center">
+          {article.category && (
+            <span className="inline-block text-xs font-medium tracking-[0.2em] uppercase text-neutral-400 dark:text-neutral-500 mb-6">
+              {article.category}
+            </span>
+          )}
+          <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-light leading-tight text-neutral-900 dark:text-neutral-100 tracking-tight">
+            {article.title}
+          </h1>
+          <time
+            dateTime={article.date}
+            className="block mt-6 text-sm text-neutral-400 dark:text-neutral-500 tracking-wide"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Retour aux publications
-          </Link>
+            {new Date(article.date).toLocaleDateString('fr-FR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </time>
+        </header>
 
-          {/* Article Header */}
-          <div className="bg-white dark:bg-gray-800 p-8 md:p-12 rounded-2xl shadow-lg mb-8">
-            {article.category && (
-              <div className="flex items-center gap-2 mb-4">
-                <Tag className="w-4 h-4 text-indigo-500" />
-                <span className="inline-block px-3 py-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/30 rounded-full">
-                  {article.category}
-                </span>
-              </div>
-            )}
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              {article.title}
-            </h1>
-            {article.excerpt && (
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
-                {article.excerpt}
-              </p>
-            )}
-            <div className="flex flex-wrap items-center gap-6 text-gray-600 dark:text-gray-400">
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4" />
-                <span className="font-semibold">{article.author}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                <time dateTime={article.date}>
-                  {new Date(article.date).toLocaleDateString('fr-FR', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </time>
-              </div>
+        {/* Cover Image */}
+        {article.cover && (
+          <figure className="mb-12">
+            <img
+              src={article.cover}
+              alt={article.title}
+              className="w-full h-auto"
+            />
+          </figure>
+        )}
+
+        {/* Article Content */}
+        <div className="pb-16">
+          <div
+            className="article-prose"
+            dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+          />
+
+          {/* Author Attribution */}
+          <div className="mt-16 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+            <p className="text-sm text-neutral-400 dark:text-neutral-500">
+              Par <span className="text-neutral-600 dark:text-neutral-300 font-medium">{article.author}</span>
+            </p>
+          </div>
+        </div>
+      </main>
+
+      {/* Dernières Publications */}
+      {recentArticles.length > 0 && (
+        <section className="bg-[#0B1121] mt-12">
+          <div className="w-[90%] lg:w-[85%] mx-auto py-16 lg:py-24">
+            {/* Section Header */}
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+                Nos dernières<br />publications
+              </h2>
+              <Link
+                href="/publications"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium transition-colors whitespace-nowrap"
+              >
+                Toutes les publications
+              </Link>
+            </div>
+
+            {/* Articles Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/10 border-t border-white/10">
+              {recentArticles.map((item) => (
+                <Link
+                  key={item.slug}
+                  href={`/publications/${item.slug}`}
+                  className="group flex flex-col justify-between bg-[#0B1121] p-6 lg:p-8 min-h-[220px] hover:bg-[#111b33] transition-colors"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 text-xs text-neutral-400 mb-4">
+                      <span>
+                        {new Date(item.date).toLocaleDateString('fr-FR', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </span>
+                      {item.category && (
+                        <>
+                          <span className="text-neutral-600">|</span>
+                          <span>{item.category}</span>
+                        </>
+                      )}
+                    </div>
+                    <h3 className="text-white text-base lg:text-lg font-medium leading-snug group-hover:text-indigo-300 transition-colors">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <div className="mt-6">
+                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 group-hover:border-indigo-400 group-hover:text-indigo-400 text-white/60 transition-colors">
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Cover Images Row */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 mt-0">
+              {recentArticles.map((item) => (
+                <Link key={`cover-${item.slug}`} href={`/publications/${item.slug}`} className="block overflow-hidden">
+                  {item.cover ? (
+                    <img
+                      src={item.cover}
+                      alt={item.title}
+                      className="w-full h-48 lg:h-56 object-cover hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-full h-48 lg:h-56 bg-gradient-to-br from-indigo-900 to-indigo-700 flex items-center justify-center">
+                      <span className="text-4xl font-bold text-white/10">{item.title.charAt(0)}</span>
+                    </div>
+                  )}
+                </Link>
+              ))}
             </div>
           </div>
 
-          {/* Article Content */}
-          <div className="bg-white dark:bg-gray-800 p-8 md:p-12 rounded-2xl shadow-lg">
-            <div
-              className="prose prose-lg prose-indigo dark:prose-invert max-w-none
-                prose-headings:text-gray-900 dark:prose-headings:text-white
-                prose-p:text-gray-700 dark:prose-p:text-gray-300
-                prose-a:text-indigo-600 dark:prose-a:text-indigo-400
-                prose-strong:text-gray-900 dark:prose-strong:text-white
-                prose-ul:text-gray-700 dark:prose-ul:text-gray-300
-                prose-ol:text-gray-700 dark:prose-ol:text-gray-300
-                prose-li:text-gray-700 dark:prose-li:text-gray-300
-                prose-blockquote:border-indigo-500 prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-300
-                prose-img:rounded-lg prose-img:shadow-md"
-              dangerouslySetInnerHTML={{ __html: article.contentHtml }}
-            />
+          {/* Footer inside dark section */}
+          <div className="w-[90%] lg:w-[85%] mx-auto border-t border-white/10 py-8 flex justify-between items-center">
+            <p className="text-xs text-neutral-500">
+              &copy; 2026 Agoranodes
+            </p>
+            <div className="flex gap-6">
+              <a href="https://github.com/agoranodes" target="_blank" rel="noopener noreferrer" className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">
+                GitHub
+              </a>
+              <a href="https://twitter.com/agoranodes" target="_blank" rel="noopener noreferrer" className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">
+                Twitter
+              </a>
+            </div>
           </div>
-
-          {/* Back Link Bottom */}
-          <div className="mt-12 flex items-center justify-between">
-            <Link
-              href="/publications"
-              className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Retour aux publications
-            </Link>
-          </div>
-        </article>
-      </main>
-
-      {/* Footer */}
-      <footer className="container mx-auto px-4 py-8 mt-20 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex justify-between items-center">
-          <p className="text-gray-600 dark:text-gray-400">
-            © 2026 Agoranodes - Propulsé par 4NK & Bitcoin
-          </p>
-          <div className="space-x-6">
-            <a href="https://github.com/agoranodes" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-              GitHub
-            </a>
-            <a href="https://twitter.com/agoranodes" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-              Twitter
-            </a>
-          </div>
-        </div>
-      </footer>
+        </section>
+      )}
     </div>
   );
 }
