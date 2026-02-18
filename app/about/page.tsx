@@ -220,22 +220,6 @@ export default function AboutPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="container mx-auto px-4 py-8 mt-20 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex justify-between items-center">
-          <p className="text-gray-600 dark:text-gray-400">
-            © 2026 Agoranodes - Propulsé par 4NK & Bitcoin
-          </p>
-          <div className="space-x-6">
-            <a href="https://github.com/agoranodes" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-              GitHub
-            </a>
-            <a href="https://twitter.com/agoranodes" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-              Twitter
-            </a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

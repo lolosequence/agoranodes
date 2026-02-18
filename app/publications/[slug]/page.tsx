@@ -247,20 +247,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
           </div>
 
-          {/* Footer inside dark section */}
-          <div className="w-[90%] lg:w-[85%] mx-auto border-t border-white/10 py-8 flex justify-between items-center">
-            <p className="text-xs text-neutral-500">
-              &copy; 2026 Agoranodes
-            </p>
-            <div className="flex gap-6">
-              <a href="https://github.com/agoranodes" target="_blank" rel="noopener noreferrer" className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">
-                GitHub
-              </a>
-              <a href="https://twitter.com/agoranodes" target="_blank" rel="noopener noreferrer" className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">
-                Twitter
-              </a>
-            </div>
-          </div>
         </section>
       )}
     </div>
